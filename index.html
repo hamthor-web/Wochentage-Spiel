@@ -6,6 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>Wochen-Spiel</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#dcebc5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Wochentage-Spiel">
+<link rel="apple-touch-icon" href="./icon-192.png">
 <style>
   :root { --panel: rgba(255,255,255,.92); --shadow: 0 10px 28px rgba(0,0,0,.22); }
   * { box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
@@ -1224,5 +1229,14 @@
   refillJokerBag();
   renderAll(); glowNext();
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(err => {
+      console.warn('Offline-Modus konnte nicht aktiviert werden:', err);
+    });
+  });
+}
 </script>
 </body></html>
