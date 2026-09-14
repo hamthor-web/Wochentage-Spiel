@@ -245,7 +245,21 @@
 
 
 <style id="production-hide-test-controls">
-#jokerTestBtn, #footballTestBtn, #jokerTestOverlay, #footballTestOverlay { display:none !important; }
+#weekdayTestBtn, #weekdayTestOverlay, #jokerTestBtn, #footballTestBtn, #jokerTestOverlay, #footballTestOverlay { display:none !important; }
+</style>
+
+<style id="weekday-test-controls">
+#weekdayTestBtn { border:0; border-radius:14px; padding:9px 13px; font-weight:800; font-size:14px; background:rgba(255,229,218,.98); box-shadow:0 5px 18px rgba(0,0,0,.18); }
+#weekdayTestOverlay { position:fixed; inset:0; z-index:70; display:none; align-items:center; justify-content:center; background:rgba(20,28,20,.52); backdrop-filter:blur(3px); padding:18px; }
+#weekdayTestOverlay.show { display:flex; }
+#weekdayTestPanel { width:min(92vw,760px); max-height:88vh; overflow:auto; background:#fff9f5; border-radius:24px; box-shadow:var(--shadow); padding:18px; }
+#weekdayTestPanel h2 { margin:0 0 6px; font-size:clamp(24px,3.5vw,38px); color:#65382e; }
+#weekdayTestPanel p { margin:0 0 14px; color:#805044; font-weight:650; }
+#weekdayTestList { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+.weekdayTestItem { border:0; border-radius:14px; padding:11px 12px; background:#ffe5da; color:#56332b; font-size:15px; font-weight:800; text-align:left; box-shadow:0 3px 10px rgba(0,0,0,.10); }
+.weekdayTestItem:active { transform:scale(.985); }
+#weekdayTestClose { margin-top:14px; border:0; border-radius:14px; padding:10px 16px; background:#ececec; font-size:16px; font-weight:800; }
+@media (max-width:650px){ #weekdayTestList{grid-template-columns:1fr;} }
 </style>
 
 <style id="responsive-phone-cards">
@@ -614,6 +628,7 @@ body { display:block; background:#e6edcf; }
       </div>
     </button>
     <button id="reset">Neu starten</button>
+    <button id="weekdayTestBtn">Wochentage testen</button>
     <button id="jokerTestBtn">Töne/Joker testen</button>
     <button id="footballTestBtn">Fußball testen</button>
   </div>
@@ -633,6 +648,15 @@ body { display:block; background:#e6edcf; }
       <p>Tippe eine Frage an. Danach kannst du direkt die nächste testen.</p>
       <div id="footballTestList"></div>
       <button id="footballTestClose">Schließen</button>
+    </div>
+  </div>
+
+  <div id="weekdayTestOverlay" aria-hidden="true">
+    <div id="weekdayTestPanel">
+      <h2>Wochentagskarten testen</h2>
+      <p>Wähle eine Karte aus und tippe anschließend den richtigen Wochentag auf dem Spielbrett an.</p>
+      <div id="weekdayTestList"></div>
+      <button id="weekdayTestClose">Schließen</button>
     </div>
   </div>
 
@@ -676,6 +700,10 @@ document.getElementById('boardWrap').after(taskDock);
   const footballTestOverlay=document.getElementById('footballTestOverlay');
   const footballTestList=document.getElementById('footballTestList');
   const footballTestClose=document.getElementById('footballTestClose');
+  const weekdayTestBtn=document.getElementById('weekdayTestBtn');
+  const weekdayTestOverlay=document.getElementById('weekdayTestOverlay');
+  const weekdayTestList=document.getElementById('weekdayTestList');
+  const weekdayTestClose=document.getElementById('weekdayTestClose');
   const goalHit=document.getElementById('goalHit');
   const magicHits=[...document.querySelectorAll('.magicHit')];
   const lampGlowFx=document.getElementById('lampGlowFx');
@@ -699,8 +727,11 @@ document.getElementById('boardWrap').after(taskDock);
   const goalSlots=[[9.6,46.8],[12.0,46.8]];
   let active=0, busy=false, waitingForCardTarget=false;
   let currentQuestion=null;
+  let weekdayTestMode=false;
   const questionBag=players.map(()=>[]);
   const weekdayQuestions=[
+    {q:'Heute ist Donnerstag. Welcher war der vorige Tag?', a:'Mittwoch'},
+    {q:'Heute ist Mittwoch. Welcher ist der nächste Tag?', a:'Donnerstag'},
     {q:'Heute ist Montag. Welcher Tag ist morgen?', a:'Dienstag'},
     {q:'Heute ist Donnerstag. Welcher Tag war gestern?', a:'Mittwoch'},
     {q:'Welcher Tag kommt nach Mittwoch?', a:'Donnerstag'},
@@ -896,8 +927,9 @@ document.getElementById('boardWrap').after(taskDock);
   document.addEventListener('pointerdown',primeCardSound,{passive:true});
   document.addEventListener('touchstart',primeCardSound,{passive:true});
 
-  function openWeekdayQuestion(){
-    currentQuestion = nextQuestion();
+  function openWeekdayQuestion(forcedQuestion=null, testMode=false){
+    currentQuestion = forcedQuestion || nextQuestion();
+    weekdayTestMode = testMode;
     const source = sourcePosForCurrentField();
     questionCard.style.setProperty('--fromX', source.x);
     questionCard.style.setProperty('--fromY', source.y);
@@ -1169,6 +1201,31 @@ document.getElementById('boardWrap').after(taskDock);
     footballTestOverlay.classList.remove('show');
     footballTestOverlay.setAttribute('aria-hidden','true');
   }
+
+  function buildWeekdayTestList(){
+    weekdayTestList.innerHTML='';
+    weekdayQuestions.forEach((question,i)=>{
+      const button=document.createElement('button');
+      button.type='button';
+      button.className='weekdayTestItem';
+      button.textContent=(i+1)+'. '+question.q;
+      button.addEventListener('click',()=>{
+        hideWeekdayTestPicker();
+        openWeekdayQuestion(question,true);
+      });
+      weekdayTestList.appendChild(button);
+    });
+  }
+  function showWeekdayTestPicker(){
+    if(waitingForCardTarget || waitingForMoveCard || waitingForJoker || waitingForFootballCard || busy) return;
+    buildWeekdayTestList();
+    weekdayTestOverlay.classList.add('show');
+    weekdayTestOverlay.setAttribute('aria-hidden','false');
+  }
+  function hideWeekdayTestPicker(){
+    weekdayTestOverlay.classList.remove('show');
+    weekdayTestOverlay.setAttribute('aria-hidden','true');
+  }
   // --- Akustische Rückmeldungen (Testversion) ---
   let audioCtx=null;
   function ac(){
@@ -1439,6 +1496,16 @@ document.getElementById('boardWrap').after(taskDock);
     waitingForCardTarget = false;
     questionCard.classList.add('correct');
     showToast('Richtig!',700);
+    if(weekdayTestMode){
+      waitingForCardTarget=false;
+      setTimeout(()=>closeWeekdayQuestion(()=>{
+        currentQuestion=null;
+        weekdayTestMode=false;
+        busy=false;
+        setTimeout(showWeekdayTestPicker,120);
+      }),500);
+      return;
+    }
     await moveActiveToDay(day);
     closeWeekdayQuestion(()=>{
       currentQuestion = null;
@@ -1471,6 +1538,17 @@ document.getElementById('boardWrap').after(taskDock);
     players[active].pos=target;
     placeToken(active,true); placeToken(1-active,false);
   }
+  function resolveJumpLanding(){
+    // Die Aktion gehört noch zum Zug der gesprungenen Figur.
+    busy=false;
+    toast.classList.remove('show');
+    const type=track[players[active].pos][2];
+    if(type==='card'){ openWeekdayQuestion(); return; }
+    if(type==='move'){ openMoveCard(); return; }
+    if(type==='football'){ openFootballCard(); return; }
+    if(type==='star'){ openJokerCard(); return; }
+    switchTurn();
+  }
   async function selectJokerTarget(kind,index=null){
     if(!waitingForJoker || busy || !currentJoker) return;
     const expected=expectedJokerTarget();
@@ -1487,7 +1565,7 @@ document.getElementById('boardWrap').after(taskDock);
     }
     await moveActiveToTrackIndex(index);
     if(jokerTestMode){ setTimeout(endJokerTest,250); return; }
-    closeJokerCard(()=>{ currentJoker=null; setTimeout(switchTurn,120); });
+    closeJokerCard(()=>{ currentJoker=null; setTimeout(resolveJumpLanding,120); });
   }
 
   function selectMagicTarget(name){
@@ -1533,14 +1611,17 @@ document.getElementById('boardWrap').after(taskDock);
   footballTestBtn.addEventListener('click', showFootballTestPicker);
   footballTestClose.addEventListener('click', hideFootballTestPicker);
   footballTestOverlay.addEventListener('click',(e)=>{ if(e.target===footballTestOverlay) hideFootballTestPicker(); });
+  weekdayTestBtn.addEventListener('click',showWeekdayTestPicker);
+  weekdayTestClose.addEventListener('click',hideWeekdayTestPicker);
+  weekdayTestOverlay.addEventListener('click',(e)=>{ if(e.target===weekdayTestOverlay) hideWeekdayTestPicker(); });
   diceBtn.addEventListener('pointerdown',primeGoalSound,{passive:true});
   diceBtn.addEventListener('touchstart',primeGoalSound,{passive:true});
   diceBtn.addEventListener('click',()=>{ primeGoalSound(); roll(); });
   function restart(){
     resetCardBags();
-    players[0].pos=0; players[1].pos=0; players[0].finished=false; players[1].finished=false; active=0; busy=false; waitingForCardTarget=false; waitingForMoveCard=false; waitingForJoker=false; waitingForFootballCard=false; jokerTestMode=false; jokerTestSnapshot=null; footballTestMode=false;
+    players[0].pos=0; players[1].pos=0; players[0].finished=false; players[1].finished=false; active=0; busy=false; waitingForCardTarget=false; waitingForMoveCard=false; waitingForJoker=false; waitingForFootballCard=false; weekdayTestMode=false; jokerTestMode=false; jokerTestSnapshot=null; footballTestMode=false;
     tokens.forEach(t=>t.classList.remove('inGoal'));
-    board.classList.remove('cardMode','jokerTargetMode','magicTargetMode'); winner.classList.remove('show'); jokerTestOverlay.classList.remove('show'); jokerTestOverlay.setAttribute('aria-hidden','true'); footballTestOverlay.classList.remove('show'); footballTestOverlay.setAttribute('aria-hidden','true'); toast.classList.remove('show'); questionCard.style.display='none'; questionCard.setAttribute('aria-hidden','true'); questionCard.classList.remove('show','correct','shake'); moveCard.style.display='none'; moveCard.setAttribute('aria-hidden','true'); moveCard.classList.remove('show'); footballCard.style.display='none'; footballCard.setAttribute('aria-hidden','true'); footballCard.classList.remove('show'); jokerCard.style.display='none'; jokerCard.setAttribute('aria-hidden','true'); jokerCard.classList.remove('show','correct','shake','targetMode','visualQuestion','frogQuestion'); clearJokerChoices(); clearMagicEffects(); currentQuestion=null; currentJoker=null; setDie(1); renderAll(); glowNext();
+    board.classList.remove('cardMode','jokerTargetMode','magicTargetMode'); winner.classList.remove('show'); weekdayTestOverlay.classList.remove('show'); weekdayTestOverlay.setAttribute('aria-hidden','true'); jokerTestOverlay.classList.remove('show'); jokerTestOverlay.setAttribute('aria-hidden','true'); footballTestOverlay.classList.remove('show'); footballTestOverlay.setAttribute('aria-hidden','true'); toast.classList.remove('show'); questionCard.style.display='none'; questionCard.setAttribute('aria-hidden','true'); questionCard.classList.remove('show','correct','shake'); moveCard.style.display='none'; moveCard.setAttribute('aria-hidden','true'); moveCard.classList.remove('show'); footballCard.style.display='none'; footballCard.setAttribute('aria-hidden','true'); footballCard.classList.remove('show'); jokerCard.style.display='none'; jokerCard.setAttribute('aria-hidden','true'); jokerCard.classList.remove('show','correct','shake','targetMode','visualQuestion','frogQuestion'); clearJokerChoices(); clearMagicEffects(); currentQuestion=null; currentJoker=null; setDie(1); renderAll(); glowNext();
   }
   function confirmRestart(){
     if(window.confirm('Wirklich neu starten?')) restart();

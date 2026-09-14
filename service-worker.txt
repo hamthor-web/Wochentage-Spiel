@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wochentage-spiel-test-v12';
+const CACHE_NAME = 'wochentage-spiel-github-v15';
 const APP_SHELL = ['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install', event => {
