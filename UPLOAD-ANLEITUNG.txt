@@ -1,0 +1,12 @@
+In diesem Paket müssen nur fünf App-Dateien zu GitHub hochgeladen werden:
+
+index.html
+manifest.webmanifest
+sw.js
+icon-192.png
+icon-512.png
+
+Die ZIP-Datei zuerst entpacken. Danach diese fünf Dateien im GitHub-Repository
+hochladen und vorhandene gleichnamige Dateien ersetzen. Zum Schluss auf
+"Commit changes" klicken. Die Bilder sind bereits vollständig in index.html
+eingebettet. Es wird kein assets-Ordner benötigt.
