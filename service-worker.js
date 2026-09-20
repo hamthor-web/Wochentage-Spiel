@@ -17,6 +17,7 @@ function patchSport(html) {
     '#board.cardMode .weekdayHit { display:block; outline:4px solid rgba(255,235,59,.82); outline-offset:-4px; animation:wdayPulse 1.1s ease-in-out infinite alternate; }',
     '#board.cardMode .weekdayHit { display:block; }'
   );
+}
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(APP_SHELL)).then(() => self.skipWaiting()));
