@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wochentage-spiel-github-v16';
+const CACHE_NAME = 'wochentage-spiel-github-v17';
 const APP_SHELL = ['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png'];
 
 function patchAbenteuer(html) {
@@ -11,6 +11,12 @@ function patchAbenteuer(html) {
     .replace('const goalCenter=[15.5,49.5];','const goalCenter=[16.3,49.2];')
     .replace('const goalSlots=[[7.5,49.5],[25,50.5]];','const goalSlots=[[7.9,48.7],[24.7,49.7]];');
 }
+
+function patchSport(html) {
+  return html.replace(
+    '#board.cardMode .weekdayHit { display:block; outline:4px solid rgba(255,235,59,.82); outline-offset:-4px; animation:wdayPulse 1.1s ease-in-out infinite alternate; }',
+    '#board.cardMode .weekdayHit { display:block; }'
+  );
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(APP_SHELL)).then(() => self.skipWaiting()));
@@ -25,13 +31,14 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
   const isAbenteuer = url.pathname.endsWith('/abenteuer.html');
+  const isSport = url.pathname.endsWith('/sport.html');
 
-  if (isAbenteuer) {
+  if (isAbenteuer || isSport) {
     event.respondWith(
       fetch(event.request)
         .then(async r => {
           const html = await r.text();
-          const patched = patchAbenteuer(html);
+          const patched = isSport ? patchSport(html) : patchAbenteuer(html);
           const response = new Response(patched, {
             status: r.status,
             statusText: r.statusText,
