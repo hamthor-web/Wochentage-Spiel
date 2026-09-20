@@ -50,7 +50,7 @@
   #toast.show { opacity:1; transform:translateX(-50%) translateY(4px); }
 
   .weekdayHit { position:absolute; z-index:20; border-radius:25px; background:rgba(255,255,255,0); border:0; display:none; }
-  #board.cardMode .weekdayHit { display:block; outline:none; outline-offset:0; animation:none; box-shadow:none; }
+  #board.cardMode .weekdayHit { display:block; outline:none !important; outline-offset:0; animation:none !important; box-shadow:none !important; background:transparent !important; border:0 !important; }
   @keyframes wdayPulse { from{box-shadow:inset 0 0 0 0 rgba(255,235,59,.2)} to{box-shadow:inset 0 0 24px 8px rgba(255,235,59,.38)} }
   #board.cardMode::after { content:""; position:absolute; inset:0; background:rgba(255,255,255,.04); pointer-events:none; z-index:14; }
 
@@ -102,9 +102,9 @@
   .jokerChoice { border:0; border-radius:16px; padding:12px 14px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,.12); color:#503d0c; font-size:clamp(16px,2vw,22px); font-weight:850; text-align:center; }
   .jokerChoice:active { transform:scale(.98); }
   @keyframes jokerShake { 0%,100%{transform:translate(-50%,-50%) scale(1) rotate(0deg)} 20%{transform:translate(calc(-50% - 10px),-50%) scale(1) rotate(-1.6deg)} 40%{transform:translate(calc(-50% + 8px),-50%) scale(1) rotate(1.3deg)} 60%{transform:translate(calc(-50% - 6px),-50%) scale(1) rotate(-1deg)} 80%{transform:translate(calc(-50% + 4px),-50%) scale(1) rotate(.8deg)} }
-  .trackHit, #goalHit { position:absolute; z-index:39; width:7.2%; aspect-ratio:1; transform:translate(-50%,-50%); border:0; border-radius:50%; background:transparent; display:none; padding:0; }
+  .trackHit, #goalHit { position:absolute; z-index:39; width:7.2%; aspect-ratio:1; transform:translate(-50%,-50%); border:0; outline:0; box-shadow:none; border-radius:50%; background:transparent; display:none; padding:0; }
   #board.jokerTargetMode .trackHit, #board.jokerTargetMode #goalHit { display:block; }
-  #goalHit { left:10.8%; top:46.5%; width:12.5%; aspect-ratio:1.1; border-radius:18px; }
+  #goalHit { left:5%; top:39%; width:12%; height:15%; aspect-ratio:auto; border-radius:18px; transform:none; }
 
   #jokerTestBtn { border:0; border-radius:14px; padding:9px 13px; font-weight:800; font-size:14px; background:rgba(255,245,190,.96); box-shadow:0 5px 18px rgba(0,0,0,.18); }
   #jokerTestOverlay { position:absolute; inset:0; z-index:70; display:none; align-items:center; justify-content:center; background:rgba(20,28,20,.52); backdrop-filter:blur(3px); padding:18px; }
@@ -132,7 +132,7 @@
   #footballTestClose { margin-top:14px; border:0; border-radius:14px; padding:10px 16px; background:#ececec; font-size:16px; font-weight:800; }
   @media (max-width:650px){ #footballTestList{grid-template-columns:1fr;} }
 
-  .magicHit { position:absolute; z-index:39; border:0; background:transparent; display:none; padding:0; transform:translate(-50%,-50%); }
+  .magicHit { position:absolute; z-index:39; border:0; outline:0; box-shadow:none; background:transparent; display:none; padding:0; transform:none; }
   #board.magicTargetMode .magicHit, #board.magicTargetMode #goalHit { display:block; }
   .effectFx { position:absolute; z-index:45; pointer-events:none; opacity:0; }
   #lampGlowFx { left:71.5%; top:29.8%; width:9.8%; aspect-ratio:1; transform:translate(-50%,-50%) scale(.40); border-radius:50%; background:radial-gradient(circle, rgba(255,252,210,.99) 0%, rgba(255,233,120,.94) 28%, rgba(255,214,60,.50) 56%, rgba(255,210,40,0) 80%); filter:blur(1px); }
@@ -598,23 +598,23 @@ body { display:block; background:#e6edcf; }
         </div>
       </div>
       <button id="goalHit" aria-label="Tor"></button>
-      <button class="magicHit" data-magic="lamp" style="left:71.5%;top:29.8%;width:8.2%;height:13%;" aria-label="Lampe"></button>
-      <button class="magicHit" data-magic="sun" style="left:31.8%;top:4.9%;width:10%;height:10%;border-radius:50%;" aria-label="Sonne"></button>
-      <button class="magicHit" data-magic="ice" style="left:84.8%;top:40.8%;width:13%;height:20%;" aria-label="Eisstand"></button>
-      <button class="magicHit" data-magic="bird" style="left:75.6%;top:50.4%;width:11%;height:12%;border-radius:40%;" aria-label="Vogel"></button>
-      <button class="magicHit" data-magic="girl" style="left:7.8%;top:46.6%;width:13%;height:18%;border-radius:36%;" aria-label="Mädchen"></button>
-      <button class="magicHit" data-magic="raven" style="left:34.6%;top:30.7%;width:8.5%;height:10.5%;border-radius:40%;" aria-label="Rabe"></button>
-      <button class="magicHit" data-magic="frog" style="left:60.6%;top:72.2%;width:9%;height:10%;border-radius:40%;" aria-label="Frosch"></button>
-      <button class="magicHit" data-magic="cat" style="left:57.8%;top:55.0%;width:10.5%;height:17%;border-radius:40%;" aria-label="Katze"></button>
-      <button class="magicHit" data-magic="bottle" style="left:82.4%;top:61.5%;width:6.5%;height:13%;border-radius:35%;" aria-label="Blaue Flasche"></button>
+      <button class="magicHit" data-magic="lamp" style="left:68.761%;top:22.379%;width:8.2%;height:13%;" aria-label="Lampe"></button>
+      <button class="magicHit" data-magic="sun" style="left:28.001%;top:0%;width:10%;height:10%;" aria-label="Sonne"></button>
+      <button class="magicHit" data-magic="ice" style="left:76.938%;top:26.666%;width:10.438%;height:20%;" aria-label="Eisstand"></button>
+      <button class="magicHit" data-magic="bird" style="left:70.83%;top:42.626%;width:6.583%;height:7.995%;" aria-label="Vogel"></button>
+      <button class="magicHit" data-magic="girl" style="left:3.471%;top:43.42%;width:7.965%;height:12.7%;" aria-label="Mädchen"></button>
+      <button class="magicHit" data-magic="raven" style="left:32.303%;top:27.284%;width:6.822%;height:8.38%;" aria-label="Rabe"></button>
+      <button class="magicHit" data-magic="frog" style="left:54.858%;top:67.488%;width:9%;height:10%;" aria-label="Frosch"></button>
+      <button class="magicHit" data-magic="cat" style="left:56.475%;top:50.053%;width:7.673%;height:12.406%;" aria-label="Katze"></button>
+      <button class="magicHit" data-magic="bottle" style="left:82.135%;top:59.38%;width:4.998%;height:10.055%;" aria-label="Blaue Flasche"></button>
 
       <button class="weekdayHit" data-day="Montag" style="left:18%;top:12%;width:14%;height:11%;" aria-label="Montag"></button>
-      <button class="weekdayHit" data-day="Dienstag" style="left:45%;top:13%;width:15%;height:11%;" aria-label="Dienstag"></button>
-      <button class="weekdayHit" data-day="Mittwoch" style="left:70%;top:12%;width:16%;height:11%;" aria-label="Mittwoch"></button>
-      <button class="weekdayHit" data-day="Donnerstag" style="left:81%;top:48%;width:13%;height:12%;" aria-label="Donnerstag"></button>
-      <button class="weekdayHit" data-day="Freitag" style="left:68%;top:72%;width:15%;height:11%;" aria-label="Freitag"></button>
-      <button class="weekdayHit" data-day="Samstag" style="left:35%;top:78%;width:17%;height:11%;" aria-label="Samstag"></button>
-      <button class="weekdayHit" data-day="Sonntag" style="left:9%;top:64%;width:15%;height:12%;" aria-label="Sonntag"></button>
+      <button class="weekdayHit" data-day="Dienstag" style="left:47.474%;top:14.531%;width:15%;height:11%;" aria-label="Dienstag"></button>
+      <button class="weekdayHit" data-day="Mittwoch" style="left:75.124%;top:13.06%;width:13.35%;height:9.587%;" aria-label="Mittwoch"></button>
+      <button class="weekdayHit" data-day="Donnerstag" style="left:85.859%;top:49.06%;width:10.35%;height:10.116%;" aria-label="Donnerstag"></button>
+      <button class="weekdayHit" data-day="Freitag" style="left:72.77%;top:72%;width:15%;height:11%;" aria-label="Freitag"></button>
+      <button class="weekdayHit" data-day="Samstag" style="left:38.269%;top:80.002%;width:14.703%;height:8.998%;" aria-label="Samstag"></button>
+      <button class="weekdayHit" data-day="Sonntag" style="left:10.325%;top:64.353%;width:13.145%;height:9.762%;" aria-label="Sonntag"></button>
     </div>
   </div>
 
@@ -717,9 +717,56 @@ document.getElementById('boardWrap').after(taskDock);
   const tokens=[document.getElementById('boy'), document.getElementById('girl')];
 
   // Feldzentren orientieren sich an den sichtbaren Feldern des illustrierten Rundwegs.
+  const trackAreas=[
+    [10.8,25,6,8],
+    [14.609,19.878,3.615,5.291],
+    [21.264,15.161,6.883,5.409],
+    [33.213,15.513,4.852,5.762],
+    [41.474,16.803,3.968,4.938],
+    [52.74,17.88,4.675,5.173],
+    [63.587,16.738,4.587,5.291],
+    [69.615,15.525,4.498,5.998],
+    [79.499,13.7,4.675,6.704],
+    [85.474,23.2,5.735,7.058],
+    [87.097,30.344,6,8],
+    [87.962,39.151,5.382,7.058],
+    [87.939,50.289,6,8],
+    [89.152,62.278,6,8],
+    [78.652,72.971,6,8],
+    [64.715,77.642,4.763,7.058],
+    [55.562,79.242,6,8],
+    [43.65,80.367,6,8],
+    [31.505,77.707,6,8],
+    [24.329,70.836,6,8],
+    [12.8,64.9,6,8],
+    [18.325,55.485,6,8],
+    [19.743,46.409,6,8]
+  ];
+
   const track=[
-    [13.8,29.0,'football'], [15.4,22.7,'football'], [24.0,18.1,'Montag'], [34.8,18.1,'card'], [42.0,18.8,'move'], [51.5,18.7,'Dienstag'], [62.7,18.5,'football'], [69.7,18.7,'star'], [78.7,17.7,'Mittwoch'],
-    [86.0,27.2,'star'], [87.8,36.7,'move'], [88.4,44.8,'card'], [88.2,53.7,'Donnerstag'], [88.0,65.1,'move'], [77.5,76.5,'Freitag'], [64.8,80.7,'move'], [56.0,82.3,'card'], [44.0,82.6,'Samstag'], [30.0,81.0,'star'], [23.0,74.6,'move'], [15.8,68.9,'Sonntag'], [20.0,57.6,'card'], [20.8,47.7,'star']
+    [13.8,29.0,'football'],
+    [16.416,22.523,'football'],
+    [24.706,17.866,'Montag'],
+    [35.639,18.394,'card'],
+    [43.458,19.272,'move'],
+    [55.078,20.466,'Dienstag'],
+    [65.88,19.383,'football'],
+    [71.864,18.524,'star'],
+    [81.837,17.052,'Mittwoch'],
+    [88.342,26.729,'star'],
+    [90.097,34.344,'move'],
+    [90.653,42.68,'card'],
+    [90.939,54.289,'Donnerstag'],
+    [92.152,66.278,'move'],
+    [81.652,76.971,'Freitag'],
+    [67.097,81.171,'move'],
+    [58.562,83.242,'card'],
+    [46.65,84.367,'Samstag'],
+    [34.505,81.707,'star'],
+    [27.329,74.836,'move'],
+    [15.8,68.9,'Sonntag'],
+    [21.325,59.485,'card'],
+    [22.743,50.409,'star']
   ];
   const dayIndex={Montag:2,Dienstag:5,Mittwoch:8,Donnerstag:12,Freitag:14,Samstag:17,Sonntag:20};
   const players=[{pos:0,finished:false,name:'Blau'},{pos:0,finished:false,name:'Rot'}];
@@ -886,12 +933,18 @@ document.getElementById('boardWrap').after(taskDock);
   const trackHits=[];
   track.forEach((p,idx)=>{
     const b=document.createElement('button');
+    const a=trackAreas[idx];
     b.className='trackHit';
     b.type='button';
     b.dataset.index=idx;
     b.setAttribute('aria-label','Spielfeld '+(idx+1));
-    b.style.left=p[0]+'%';
-    b.style.top=p[1]+'%';
+    b.style.left=a[0]+'%';
+    b.style.top=a[1]+'%';
+    b.style.width=a[2]+'%';
+    b.style.height=a[3]+'%';
+    b.style.aspectRatio='auto';
+    b.style.transform='none';
+    b.style.borderRadius='18px';
     board.appendChild(b);
     trackHits.push(b);
   });
