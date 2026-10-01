@@ -1,5 +1,5 @@
-const CACHE_NAME = 'wochentage-spiel-github-v19';
-const APP_SHELL = ['./','./index.html','./manifest.json','./manifest.webmanifest','./icon-192.svg','./icon-512.svg'];
+const CACHE_NAME = 'wochentage-spiel-github-v20';
+const APP_SHELL = ['./','./index.html','./manifest.json','./manifest.webmanifest','./icon-192.svg','./icon-512.svg','./abenteuer.png','./sport.png','./maerchen.png'];
 
 function patchAbenteuer(html) {
   return html
