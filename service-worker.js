@@ -1,5 +1,5 @@
-const CACHE_NAME = 'wochentage-spiel-github-v22';
-const APP_SHELL = ['./','./index.html','./manifest.json','./manifest.webmanifest','./icon-192.png','./icon-512.png','./abenteuer.png','./sport.png','./maerchen.png'];
+const CACHE_NAME = 'wochentage-spiel-github-v23';
+const APP_SHELL = ['./','./index.html','./manifest.json','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-192.png?v=2','./icon-512.png?v=2','./abenteuer.png','./sport.png','./maerchen.png'];
 
 function patchAbenteuer(html) {
   return html
@@ -32,6 +32,23 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin || !url.pathname.startsWith(new URL(self.registration.scope).pathname)) return;
+  // Installation metadata must not remain pinned to an old cached manifest/icon.
+  const isInstallAsset = /\/(manifest\.(?:json|webmanifest)|icon-(?:192|512)\.png)$/.test(url.pathname);
+  if (isInstallAsset) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try {
+        const response = await fetch(event.request, {cache: 'no-cache'});
+        if (response.ok) await cache.put(event.request, response.clone());
+        return response;
+      } catch (error) {
+        const cached = await cache.match(event.request);
+        return cached || Response.error();
+      }
+    })());
+    return;
+  }
+
   const isAbenteuer = url.pathname.endsWith('/abenteuer.html');
   const isSport = url.pathname.endsWith('/sport.html');
 
