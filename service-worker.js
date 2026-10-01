@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wochentage-spiel-github-v21';
+const CACHE_NAME = 'wochentage-spiel-github-v22';
 const APP_SHELL = ['./','./index.html','./manifest.json','./manifest.webmanifest','./icon-192.png','./icon-512.png','./abenteuer.png','./sport.png','./maerchen.png'];
 
 function patchAbenteuer(html) {
@@ -24,13 +24,14 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith('wochentage-spiel-') && k !== CACHE_NAME).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(new URL(self.registration.scope).pathname)) return;
   const isAbenteuer = url.pathname.endsWith('/abenteuer.html');
   const isSport = url.pathname.endsWith('/sport.html');
 
@@ -56,8 +57,8 @@ self.addEventListener('fetch', event => {
 
   if (event.request.mode === 'navigate') {
     event.respondWith(fetch(event.request).then(r => {
-      const copy=r.clone(); caches.open(CACHE_NAME).then(c=>c.put('./index.html',copy)); return r;
-    }).catch(() => caches.match('./index.html')));
+      const copy=r.clone(); caches.open(CACHE_NAME).then(c=>c.put(event.request,copy)); return r;
+    }).catch(() => caches.match(event.request).then(cached => cached || (url.pathname === new URL(self.registration.scope).pathname || url.pathname.endsWith('/index.html') ? caches.match('./index.html') : Response.error()))));
     return;
   }
 
